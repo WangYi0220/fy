@@ -1,0 +1,64 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.TeacherMapper">
+    <insert id="saveTeaInfo" parameterType="Teacher">
+        insert into `tb_teacher`(
+            `teaOpenID`,
+            `teaName`,
+            `phone`,
+            `waChat`,
+            `teaCity`,
+            `teaOrg`,
+            `identity`,
+            `introduce`,
+            `profession`,
+            `claim`,
+            `value`,
+            `other`,
+            `pic`
+        )
+        values (
+            #{teaOpenID},
+            #{teaName},
+            #{phone},
+            #{waChat},
+            #{teaCity},
+            #{teaOrg},
+            #{identity},
+            #{introduce},
+            #{profession},
+            #{claim},
+            #{value},
+            #{other},
+            #{pic}
+        )
+    </insert>
+
+    <insert id="upTeaInfo" parameterType="Teacher">
+        update `tb_teacher`
+        set `teaName`=#{teaName},
+            `phone`=#{phone},
+            `waChat`=#{waChat},
+            `teaCity`=#{teaCity},
+            `teaOrg`=#{teaOrg},
+            `identity`=#{identity},
+            `introduce`=#{introduce},
+            `profession`=#{profession},
+            `claim`=#{claim},
+            `value`=#{value},
+            `other`=#{other},
+            `pic`=#{pic}
+        where  `teaOpenID`=#{teaOpenID}
+    </insert>
+
+    <select id="getTeacherList" parameterType="String" resultType="Teacher">
+        select * from `tb_teacher`
+        <where>
+            <if test="teaName != null">
+                and teaName like concat('%',#{teaName},'%')
+            </if>
+            <if test="teaOpenID">
+                and teaOpenID = #{teaOpenID}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.TeacherCardMapper">
+    <select id="getTeacherCardList" parameterType="Map" resultType="TeacherCard">
+        select * from `tb_teacher_card`
+        <where>
+
+            <if test="param.teaOpenID != null">
+                and teaOpenID = #{param.teaOpenID}
+            </if>
+            <if test="param.flag != null">
+                and flag = #{param.flag}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTeacherCard" parameterType="String" resultType="Map">
+        select t.`teaOpenID`, t.`teaName`, t2.`pic` from `tb_teacher` t
+        inner join `tb_teacher_card` t2
+        on t.`teaOpenID` = t2.`teaOpenID`
+        where t.`teaOpenID` = #{teaOpenID}
+    </select>
+
+    <update id="upTeacherCard" parameterType="TeacherCard">
+        update `tb_teacher_card`
+        set `pic` = #{pic},
+            `flag` = #{flag}
+        where `teaOpenID` = #{teaOpenID}
+    </update>
+
+    <update id="saveTeacherCardRichText">
+        update `tb_teacher_card`
+        set `richTextID` = #{richTextID}
+        where `teaOpenID` = #{teaOpenID}
+    </update>
+
+    <select id="getTeacherCardAndRichText" parameterType="String" resultType="Map">
+        select tc.teaOpenID, rt.id, rt.content from `tb_teacher_card` tc
+        inner join `tb_rich_text` rt
+        on tc.`richTextID` = rt.`id`
+        where tc.teaOpenID = #{teaOpenID}
+    </select>
+    
+    <insert id="saveTeacherCard" parameterType="TeacherCard">
+        insert into `tb_teacher_card`(`teaOpenID`, `pic`, `flag`)
+        values (teaOpenID, pic, flag)
+    </insert>
+</mapper>

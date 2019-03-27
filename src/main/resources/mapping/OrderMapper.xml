@@ -1,0 +1,14 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.OrderMapper">
+    <insert id="addOrder" parameterType="Order">
+        insert into `tb_order` (`outTradeNo`, `transactionId`, `openID`, `totalFee`, `createTime`)
+        values (#{outTradeNo}, #{transactionId}, #{openID}, #{totalFee}, #{createTime})
+    </insert>
+
+    <select id="getOrderListOrByTransactionId" parameterType="String" resultType="Order">
+        select * from `tb_order`
+        <if test="transactionId != null and transactionId != ''">
+            where `transactionId` = #{transactionId}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,75 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.ChooseMapper">
+    <insert id="chooseTeacher" parameterType="Choose">
+        insert into `tb_choose`(stuOpenID, teaOpenID, reason)
+        values (#{stuOpenID}, #{teaOpenID}, #{reason})
+    </insert>
+
+    <update id="chooseStudent">
+        update `tb_choose`
+        set flag = #{choose.flag},
+        overTime = #{choose.overTime}
+        <where>
+            and teaOpenID = #{choose.teaOpenID}
+            and overFlag = 0
+            <foreach collection="stuOpenIDs" item="stuOpenID" index="index" open="and" separator="or" close=";">
+                stuOpenID = #{stuOpenID}
+            </foreach>
+        </where>
+    </update>
+
+    <select id="getStudentByTeaOpenID" resultType="Map">
+        select c.id, s.stuOpenID, s.stuName, s.pic from `tb_choose` c
+        inner join `tb_student` s
+        on c.stuOpenID = s.stuOpenID
+        where c.teaOpenID = #{teaOpenID}
+        and c.flag = #{flag}
+        and c.overFlag = 0
+    </select>
+
+    <update id="giveMark" parameterType="Choose">
+          update `tb_choose`
+          set star = #{star},
+              remark = #{remark}
+          where id = #{id}
+    </update>
+
+    <select id="getMark" parameterType="int" resultType="Map">
+        select c.id, c.star, c.remark, c.reason from `tb_choose` c
+        where id = #{arg0}
+    </select>
+
+    <select id="checkTeacherGiveMark" resultType="Map">
+        select c.id, c.stuOpenID, c.teaOpenID, c.overTime s.stuName from `tb_choose` c
+        inner join `tb_student` s
+        on c.c.stuOpenID = s.stuOpenID
+        where c.star is null
+        and c.overFlag = 1
+    </select>
+
+    <select id="getChooseByStuID" parameterType="String" resultType="Map">
+        select c.id, c.stuOpenID, c.teaOpenID, c.flag, t.teaName from `tb_choose` c
+        inner join `tb_teacher` t
+        on c.teaOpenID = t.teaOpenID
+        where c.stuOpenID = #{stuOpenID}
+        and c.overFlag = 0
+    </select>
+
+    <select id="getOverTime" resultType="Integer">
+        select id from `tb_choose`
+        <where>
+            overTime &lt; NOW()
+            and overFlag = 0
+        </where>
+    </select>
+
+    <update id="setOverFlag" parameterType="List">
+        update `tb_choose`
+        set overFlag = 1
+        <where>
+            <foreach collection="ids" item="id" open="id=" separator="and id=" close="">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+</mapper>

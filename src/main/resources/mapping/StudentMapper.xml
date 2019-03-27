@@ -1,0 +1,88 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.StudentMapper">
+    <insert id="saveStuInfo">
+        insert into `tb_student`(`stuOpenID`, `pic`)
+        values (#{stuOpenID}, #{pic});
+        insert into `tb_user_flag`(`openID`, `vipFlag`)
+        values (#{stuOpenID}, 1);
+        insert into `tb_stu_ticket`(stuOpenID)
+        values (#{stuOpenID});
+    </insert>
+
+    <update id="upStuInfo" parameterType="student">
+        update `tb_student`
+        set   stuName = #{stuName},
+              phone = #{phone},
+              waChat = #{waChat},
+              stuCity = #{stuCity},
+              stuOrg = #{stuOrg},
+              stuDept = #{stuDept},
+              stuSex = #{stuSex},
+              identity = #{identity},
+              stuTag = #{stuTag},
+              stuTag2 = #{stuTag2},
+              stuKill = #{stuKill},
+              stuExperience = #{stuExperience},
+              giveAuto = #{giveAuto},
+              expectTeacher = #{expectTeacher},
+              giveTeacher = #{giveTeacher},
+              harvestList = #{harvestList},
+              know = #{know},
+              stuFile = #{stuFile},
+              birthday = #{birthday}
+        where stuOpenID = #{stuOpenID}
+    </update>
+
+    <select id="getStuInfoByOpenID" parameterType="String" resultType="student">
+        select * from `tb_student`
+        where stuOpenID = #{stuOpenID}
+    </select>
+
+    <update id="upUserFlag" parameterType="userFlag">
+        <if test="vipFlag != null">
+            update `tb_user_flag`
+            set vipFlag = #{vipFlag}
+            where openID = #{openID};
+        </if>
+        <if test="subFlag != null">
+            update `tb_user_flag`
+            set subFlag = #{subFlag}
+            where openID = #{openID};
+        </if>
+        <if test="dataFlag != null">
+            update `tb_user_flag`
+            set dataFlag = #{dataFlag}
+            where openID = #{openID};
+        </if>
+    </update>
+
+    <select id="isDataIntegrity" parameterType="String" resultType="Map">
+        select * from `tb_user_flag`
+        where `openID` = #{openID}
+    </select>
+
+    <select id="getStuAllInfo" parameterType="Map" resultType="Student">
+        select * from `tb_student`
+        <where>
+            <if test="param.stuOpenID != null">
+                stuOpenID = #{param.stuOpenID}
+            </if>
+            <if test="param.stuName">
+                stuName like concat('%',#{param.stuName},'%')
+            </if>
+        </where>
+        limit #{param.start}, 10
+    </select>
+    
+    <select id="getDataTotal" parameterType="Map" resultType="int">
+        select count(1) from `tb_student`
+        <where>
+            <if test="param.stuOpenID != null">
+                stuOpenID = #{param.stuOpenID}
+            </if>
+            <if test="param.stuName">
+                stuName like concat('%',#{param.stuName},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

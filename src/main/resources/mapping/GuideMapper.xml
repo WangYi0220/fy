@@ -1,0 +1,15 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.GuideMapper">
+    <select id="getGuideList" resultType="Guide" parameterType="Integer">
+        select * from `tb_guide`
+        <if test="flag != null">
+            where flag = #{flag}
+        </if>
+    </select>
+
+    <update id="upGuide" parameterType="Guide">
+        update `tb_guide`
+        set title = #{title}, content = #{content}, img = #{img}
+        where id = #{id}
+    </update>
+</mapper>

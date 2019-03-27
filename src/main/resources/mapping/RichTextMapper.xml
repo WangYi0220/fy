@@ -1,0 +1,25 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.RichTextMapper">
+    <select id="getRichTextOrList" resultType="RichText">
+        select * from `tb_rich_text`
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="flag != null">
+                and flag = #{flag}
+            </if>
+        </where>
+    </select>
+
+    <update id="upRichText" parameterType="RichText">
+        update `tb_rich_text`
+        set `content` = #{content}
+        where id = #{id}
+    </update>
+
+    <insert id="saveRichText" parameterType="RichText" useGeneratedKeys="true" keyProperty="id">
+        insert into `tb_rich_text`(`content`, `flag`)
+        values (#{content}, #{flag})
+    </insert>
+</mapper>

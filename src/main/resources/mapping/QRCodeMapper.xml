@@ -1,0 +1,39 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.QRCodeMapper">
+    <select id="getQRCodeList" parameterType="Map" resultType="QRCode">
+        select id, title, remark, qrCode, expires, openID, flag
+        from tb_qr_code
+        <where>
+            <if test="param.id != null">
+               and id = #{param.id}
+            </if>
+            <if test="param.teaOpenID != null">
+                and openID = #{param.teaOpenID}
+            </if>
+            <if test="param.flag != null">
+                and flag = #{param.flag}
+            </if>
+
+        </where>
+
+    </select>
+
+    <update id="upQRCode" parameterType="QRCode">
+        update `tb_qr_code`
+        set title = #{title},
+            remark = #{remark},
+            qrCode = #{qrCode},
+            expires = #{expires},
+            flag = #{flag}
+        where id = #{id}
+    </update>
+
+    <insert id="saveQRCode" parameterType="QRCode">
+        insert into `tb_qr_code`(title, remark, qrCode, expires, openID, flag)
+        values (#{title}, #{remark}, #{qrCode}, #{expires}, #{openID}, #{flag})
+    </insert>
+
+    <select id="getQRCodeExpiresList" resultType="QRCode">
+        select id, title, expires from `tb_qr_code`
+    </select>
+</mapper>

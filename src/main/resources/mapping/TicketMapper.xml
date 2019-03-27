@@ -1,0 +1,28 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.fy.mapper.TicketMapper">
+    <select id="getTickerOrList" parameterType="String" resultType="Ticket">
+        select * from `tb_stu_ticket`
+        <where>
+            <if test="stuOpenID != null">
+                and `stuOpenID` = #{stuOpenID}
+            </if>
+        </where>
+    </select>
+
+    <update id="upTicket">
+        update `tb_stu_ticket`
+        set `sum` = `sum` + #{ticket.sum},
+            `usingNub` = `usingNub` + #{ticket.usingNub},
+            `usedNub` = `usedNub` + #{ticket.usedNub}
+        <where>
+            <if test="ticket.stuOpenID">
+                and `stuOpenID` = #{ticket.stuOpenID}
+            </if>
+            <if test="stuOpenIDs != null">
+                <foreach collection="stuOpenIDs" item="stuOpenID" index="index" open="and" separator="or" close=";">
+                    stuOpenID = #{stuOpenID}
+                </foreach>
+            </if>
+        </where>
+    </update>
+</mapper>
